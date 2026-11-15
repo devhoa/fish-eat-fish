@@ -304,11 +304,16 @@ function renderFishLayer() {
 }
 function escapeHtml(text) { const node = document.createElement('span'); node.textContent = text; return node.innerHTML; }
 function enterMobilePlayMode() {
-  if (!window.matchMedia('(max-width: 760px)').matches || document.body.classList.contains('play-immersive')) return;
+  const isTouchDevice = navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches;
+  if ((!window.matchMedia('(max-width: 760px)').matches && !isTouchDevice) || document.body.classList.contains('play-immersive')) return;
   document.body.classList.add('play-immersive');
   const lockLandscape = () => {
     try {
-      const request = screen.orientation?.lock?.('landscape');
+      if (!screen.orientation?.lock) {
+        if (innerHeight > innerWidth) showToast('Xoay thiết bị ngang để chơi thoải mái hơn.');
+        return;
+      }
+      const request = screen.orientation.lock('landscape');
       if (request?.catch) request.catch(() => showToast('Xoay thiết bị ngang để chơi thoải mái hơn.'));
     } catch { showToast('Xoay thiết bị ngang để chơi thoải mái hơn.'); }
   };

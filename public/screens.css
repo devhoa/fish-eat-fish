@@ -35,6 +35,7 @@
 .shell-sprite i{position:absolute;right:5px;bottom:2px;color:#fff;font-size:8px;font-style:normal;text-shadow:0 1px 3px #27615b}
 @media(max-width:540px){.health-meter{left:10px;top:48px;transform:none;width:130px}.nav-coins.nav-pearls{padding:6px 8px}}
 @media(max-width:760px){.main-nav{scrollbar-width:none;-webkit-overflow-scrolling:touch}.main-nav::-webkit-scrollbar{display:none}.nav-coins{flex-shrink:0}.creature-sprite small{display:none}}
+@media(hover:none) and (pointer:coarse){.exit-game,.game-sound-toggle{top:max(12px,env(safe-area-inset-top))}}
 body.play-immersive{overflow:hidden}
 body.play-immersive .topbar,body.play-immersive .main-nav,body.play-immersive footer{display:none}
 body.play-immersive .shell{width:100%;max-width:none;margin:0;padding:0;min-height:100dvh}

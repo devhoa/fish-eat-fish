@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Đại Dương Bé Xíu — Fish Eat Fish",
+  "short_name": "Fish Eat Fish",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#071c2c",
+  "theme_color": "#071c2c",
+  "icons": [
+    {
+      "src": "/assets/fish/clownfish_orange.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
