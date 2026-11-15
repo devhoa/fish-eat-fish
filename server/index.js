@@ -27,9 +27,13 @@ let firebaseAuth = null;
 let saveChain = Promise.resolve();
 
 try {
-  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (serviceAccountJson || serviceAccountPath) {
     const admin = require('firebase-admin');
-    const serviceAccount = require(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT));
+    const serviceAccount = serviceAccountJson
+      ? JSON.parse(serviceAccountJson)
+      : JSON.parse(await readFile(path.resolve(serviceAccountPath), 'utf8'));
     admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
     db = admin.firestore();
     firebaseAuth = admin.auth();
@@ -38,10 +42,12 @@ try {
     console.log('Leaderboard connected to Firestore.');
   }
 } catch (error) {
+  db = null; firebaseAuth = null;
   console.error('Firebase setup failed; using local leaderboard storage:', error.message);
 }
 
 if (!db) {
+  console.log('Firebase not configured; using local leaderboard storage.');
   const dataDir = path.join(here, 'data');
   await mkdir(dataDir, { recursive: true });
   try {
