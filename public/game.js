@@ -374,11 +374,16 @@ function worldPoint(event) {
   return { x: event.clientX - rect.left + state.camera.x, y: event.clientY - rect.top + state.camera.y };
 }
 canvas.addEventListener('pointermove', (event) => {
+  if (event.pointerId === floatingPointerId) return;
   if (!state.active || !state.me) return;
   state.target = worldPoint(event);
   const now = performance.now(); if (now - state.lastMove > 35) { socket.emit('move', state.target); state.lastMove = now; }
 });
-canvas.addEventListener('pointerdown', (event) => { if (!state.active) startGame(); else { state.target = worldPoint(event); socket.emit('move', state.target); } });
+canvas.addEventListener('pointerdown', (event) => {
+  if (!state.active) { startGame(); return; }
+  if (event.pointerType === 'touch') { beginFloatingJoystick(event); return; }
+  state.target = worldPoint(event); socket.emit('move', state.target);
+});
 
 function startGame() {
   startAmbientAudio();
@@ -552,8 +557,23 @@ $('closeModal').addEventListener('click', () => $('authModal').classList.add('hi
 $('authModal').addEventListener('click', (e) => { if (e.target === $('authModal')) $('authModal').classList.add('hidden'); });
 
 const joystick = $('virtualJoystick'); const joystickKnob = joystick.querySelector('span');
-joystick.addEventListener('pointerdown', (event) => { if (!state.active || !state.me) return; joystick.setPointerCapture(event.pointerId); steerJoystick(event); });
-joystick.addEventListener('pointermove', (event) => { if (joystick.hasPointerCapture(event.pointerId)) steerJoystick(event); });
+let floatingPointerId = null;
+function beginFloatingJoystick(event) {
+  if (!state.active || !state.me) return;
+  event.preventDefault();
+  floatingPointerId = event.pointerId;
+  const bounds = canvas.parentElement.getBoundingClientRect(); const radius = (joystick.offsetWidth || 88) / 2;
+  const centerX = Math.max(radius + 8, Math.min(bounds.width - radius - 8, event.clientX - bounds.left));
+  const centerY = Math.max(radius + 8, Math.min(bounds.height - radius - 8, event.clientY - bounds.top));
+  joystick.style.left = `${centerX - radius}px`; joystick.style.top = `${centerY - radius}px`;
+  joystick.style.right = 'auto'; joystick.style.bottom = 'auto'; joystick.classList.add('floating');
+  try { joystick.setPointerCapture(event.pointerId); } catch { /* window listeners keep the drag alive */ }
+  steerJoystick(event);
+}
+joystick.addEventListener('pointerdown', beginFloatingJoystick);
+window.addEventListener('pointermove', (event) => { if (event.pointerId === floatingPointerId) steerJoystick(event); });
+window.addEventListener('pointerup', (event) => resetJoystick(event));
+window.addEventListener('pointercancel', (event) => resetJoystick(event));
 function steerJoystick(event) {
   if (!state.me) return;
   const rect = joystick.getBoundingClientRect(); const radius = rect.width * .34;
@@ -564,5 +584,8 @@ function steerJoystick(event) {
   state.target = { x: state.me.x + x / radius * 380, y: state.me.y + y / radius * 380 };
   const now = performance.now(); if (now - state.lastMove > 35) { socket.emit('move', state.target); state.lastMove = now; }
 }
-function resetJoystick() { joystickKnob.style.transform = ''; }
-joystick.addEventListener('pointerup', resetJoystick); joystick.addEventListener('pointercancel', resetJoystick);
+function resetJoystick(event) {
+  if (event && event.pointerId !== floatingPointerId) return;
+  floatingPointerId = null; joystickKnob.style.transform = ''; joystick.classList.remove('floating');
+  joystick.style.left = ''; joystick.style.top = ''; joystick.style.right = ''; joystick.style.bottom = '';
+}

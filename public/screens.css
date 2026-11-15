@@ -43,9 +43,11 @@ body.play-immersive .layout{display:block;padding:0}
 body.play-immersive .main-column{width:100%}
 body.play-immersive .hero-row,body.play-immersive .sidebar,body.play-immersive .game-hints,body.play-immersive .feature-strip{display:none}
 body.play-immersive .game-card{height:100dvh;min-height:0;border-radius:0;box-shadow:none}
+body.play-immersive #gameCanvas{touch-action:none}
 body.play-immersive .game-topline{top:max(10px,env(safe-area-inset-top))}
 body.play-immersive .game-bottomline{bottom:max(10px,env(safe-area-inset-bottom))}
 body.play-immersive .virtual-joystick{bottom:max(70px,calc(env(safe-area-inset-bottom) + 70px))}
+body.play-immersive .virtual-joystick{display:block}
 .exit-game{display:none;position:absolute;top:max(12px,env(safe-area-inset-top));right:calc(120px + env(safe-area-inset-right));z-index:6;width:42px;height:42px;place-items:center;border:1px solid #ffffffd9;border-radius:12px;background:#f3fffcdf;color:#315b68;font-size:23px;box-shadow:0 3px 12px #397f741e}
 body.play-immersive .exit-game{display:grid}
 .game-sound-toggle{display:none;position:absolute;top:max(12px,env(safe-area-inset-top));right:calc(168px + env(safe-area-inset-right));z-index:6;width:42px;height:42px;place-items:center;border:1px solid #ffffffd9;border-radius:12px;background:#f3fffcdf;color:#315b68;font-size:19px;box-shadow:0 3px 12px #397f741e}
