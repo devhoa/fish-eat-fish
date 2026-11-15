@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: fish-eat-fish
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: FIREBASE_WEB_CONFIG
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
