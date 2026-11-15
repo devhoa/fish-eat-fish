@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071c2c">
+  <title>Đại Dương Bé Xíu — Fish Eat Fish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/screens.css?v=9">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Đại Dương Bé Xíu"><span class="brand-icon">🐠</span><span>đại dương<span class="brand-light">bé xíu</span></span></a>
+      <div class="top-actions"><div class="online"><i></i><span id="onlineCount">Đang kết nối</span></div><button class="icon-button" id="soundToggle" title="Bật/tắt âm thanh">♫</button><button class="profile-button" id="profileButton"><span class="avatar" id="headerAvatar">🐟</span><span id="headerName">Thủy thủ</span><span class="chevron">⌄</span></button></div>
+    </header>
+    <nav class="main-nav" aria-label="Điều hướng chính">
+      <button class="nav-item active" data-screen="home"><span>⌂</span> Trang chủ</button>
+      <button class="nav-item" data-screen="game"><span>▶</span> Chơi ngay</button>
+      <button class="nav-item" data-screen="characters"><span>🐠</span> Nhân vật</button>
+      <button class="nav-item" data-screen="shop"><span>🛍</span> Cửa hàng</button>
+      <button class="nav-item" data-screen="ranking"><span>🏆</span> Ranking</button>
+      <button class="nav-item" data-screen="profile"><span>👤</span> Hồ sơ</button>
+      <div class="nav-coins"><span>🪙</span><strong id="coinBalance">120</strong></div><div class="nav-coins nav-pearls" title="Ngọc trai dùng cho vật phẩm VIP sau này"><span>🦪</span><strong id="pearlBalance">0</strong></div>
+    </nav>
+    <section class="layout" id="layout">
+      <section class="main-column">
+        <div class="hero-row"><div><div class="eyebrow"><span class="sparkle">✦</span> ĐẠI DƯƠNG ĐANG CHỜ BẠN</div><h1>Ăn cá bé.<br><span>Lớn thật nhanh.</span></h1><p class="intro">Bơi giữa đại dương, lớn lên từng chút và trở thành chú cá to nhất!</p></div><div class="hero-fish" aria-hidden="true">🐡<span>✦</span></div></div>
+        <section class="game-card" aria-label="Khu vực chơi game">
+          <canvas id="gameCanvas" aria-label="Điều khiển cá bằng chuột hoặc chạm"></canvas>
+          <div class="fish-layer" id="fishLayer" aria-hidden="true"></div>
+          <div class="game-topline"><div class="live-pill"><i></i> ĐẠI DƯƠNG TRỰC TIẾP</div><div class="health-meter" aria-label="Thanh máu người chơi"><div class="health-meter-heading"><span>SINH LỰC</span><strong id="healthText">100 / 100</strong></div><div class="health-track"><span id="healthFill"></span></div></div><div class="minimap" id="minimap"><canvas id="miniCanvas" width="106" height="74"></canvas><span class="mini-label">BẢN ĐỒ</span></div></div>
+          <button id="exitGame" class="exit-game" type="button" title="Thoát chế độ chơi" aria-label="Về trang chủ">⌂</button>
+          <button id="gameSoundToggle" class="game-sound-toggle" type="button" title="Tắt âm thanh" aria-label="Tắt âm thanh" aria-pressed="true">♫</button>
+          <div class="match-feed" id="matchFeed"><strong>TOP 10 TRẬN ĐẤU</strong><ol id="matchFeedList"><li>Chưa có thủy thủ</li></ol></div>
+          <div class="virtual-joystick" id="virtualJoystick" aria-label="Joystick điều khiển"><span></span></div>
+          <div class="game-bottomline"><div class="score-chip"><span class="score-icon">✦</span><div><small>ĐIỂM CỦA BẠN</small><strong id="scoreValue">0</strong></div></div><div class="level-chip"><span>🐚</span><div><small>CẤP ĐỘ</small><strong id="levelValue">1</strong></div></div><button id="playButton" class="play-button"><span>▶</span> BẮT ĐẦU CHƠI</button></div>
+          <div class="game-message" id="gameMessage"><div class="message-bubble"><div class="message-fish">🐠</div><h2>Sẵn sàng ra khơi?</h2><p>Di chuyển chuột hoặc chạm để điều khiển cá của bạn.</p><button id="messagePlay" class="primary-button">Bắt đầu chơi <span>→</span></button></div></div>
+          <div class="death-overlay hidden" id="deathOverlay"><div class="message-bubble"><div class="message-fish">🫧</div><h2 id="deathTitle">Bạn đã bị hạ gục!</h2><p>Điểm trận này: <strong id="finalScore">0</strong></p><button id="retryButton" class="primary-button">Chơi lại <span>→</span></button></div></div>
+          <div class="toast" id="toast"></div>
+        </section>
+        <div class="game-hints"><span><kbd>🖱</kbd> Di chuột để bơi</span><span><b>✦</b> Ăn chấm sáng để lớn</span><span><b>🐟</b> Tránh cá lớn hơn nhé!</span></div>
+        <section class="feature-strip"><div class="feature"><span class="feature-icon coral">✹</span><div><strong>Ăn để lớn</strong><small>Thu thập sinh vật nhỏ</small></div></div><div class="feature"><span class="feature-icon aqua">◉</span><div><strong>Cẩn thận cá lớn</strong><small>Không phải ai cũng thân thiện</small></div></div><div class="feature"><span class="feature-icon yellow">♕</span><div><strong>Lên bảng vàng</strong><small>Đua top cùng mọi người</small></div></div></section>
+      </section>
+      <aside class="sidebar">
+        <section class="leaderboard-card"><div class="section-heading"><div><div class="eyebrow">CẢ ĐẠI DƯƠNG</div><h2>Bảng xếp hạng <span>🏆</span></h2></div><button class="refresh-button" id="refreshLeaderboard" title="Làm mới">↻</button></div><div class="leaderboard-tabs"><button class="active">Cao nhất</button><span>toàn server</span></div><ol id="leaderboardList" class="leaderboard-list"><li class="empty-board">Đang gọi các nhà vô địch...</li></ol><div class="your-rank"><div class="rank-no">—</div><div class="rank-avatar">🐟</div><div class="rank-name"><strong>Bạn</strong><small>Đăng nhập để lưu thành tích</small></div><strong class="rank-score" id="yourBest">—</strong></div><button class="all-ranks" id="openLeaderboard">Xem bảng xếp hạng đầy đủ <span>→</span></button></section>
+        <section class="account-card"><div class="account-illustration">🪸<span>🐠</span></div><div class="account-copy"><h3>Lưu hành trình<br>của bạn!</h3><p>Đăng nhập để lưu điểm, mở khóa skin và đua top.</p><button class="login-button" id="loginButton">Đăng nhập / Đăng ký</button></div></section>
+        <section class="stats-card"><div><span class="stats-icon">🌊</span><div><small>NGƯỜI CHƠI</small><strong id="playerCount">0</strong></div></div><div><span class="stats-icon">🐚</span><div><small>THỨC ĂN</small><strong>500</strong></div></div></section>
+        <div class="sidebar-foot"><span>✦</span> Một đại dương. Rất nhiều cuộc phiêu lưu.</div>
+      </aside>
+    </section>
+    <section class="feature-screen hidden" id="charactersScreen">
+      <div class="screen-heading"><div><div class="eyebrow">BỘ SƯU TẬP CỦA BẠN</div><h1>Chọn bạn đồng hành<span> 🐠</span></h1><p>Thu thập những chú cá độc đáo và tìm phong cách của riêng mình.</p></div><div class="coin-badge">🪙 <strong class="coin-number">120</strong> xu</div></div>
+      <div class="character-layout"><div class="featured-fish-card"><div class="fish-rarity">✦ CÁ CỦA BẠN</div><div class="featured-fish" id="featuredFish">🐠</div><h2 id="featuredName">Cá Hề Cam</h2><p>Người bạn vui vẻ luôn sẵn sàng khám phá đại dương.</p><div class="fish-stats"><div><span>MÁU</span><b id="featuredHealth">100 / 100</b></div><div title="Cá lớn hơn có thể ăn cá nhỏ khi va chạm"><span>SÁT THƯƠNG</span><b id="featuredDamage">Ăn cá nhỏ</b></div><div><span>TỐC ĐỘ BƠI</span><b id="featuredSpeed">91 đv/s</b></div></div><button class="primary-button" id="equipFish">Đang sử dụng ✓</button></div><div class="collection-panel"><div class="collection-heading"><div><h2>Bộ sưu tập</h2><small id="collectionCount">1 / 4 đã mở khóa</small></div><span>✦ Skin mới mỗi mùa</span></div><div class="fish-grid" id="fishGrid"></div></div></div>
+    </section>
+    <section class="feature-screen hidden" id="shopScreen">
+      <div class="screen-heading"><div><div class="eyebrow">GÓC NHỎ ĐẠI DƯƠNG</div><h1>Cửa hàng <span>🛍</span></h1><p>Đổi xu lấy diện mạo mới cho chuyến phiêu lưu tiếp theo.</p></div><div class="coin-badge">🪙 <strong class="coin-number">120</strong> xu</div></div>
+      <div class="shop-feature"><div><span class="shop-tag">BỘ SƯU TẬP ĐƯỢC YÊU THÍCH</span><h2>Màu sắc của đại dương</h2><p>Những bộ skin tươi tắn, dành riêng cho thủy thủ cá tính.</p><button class="shop-scroll" id="shopScroll">Khám phá bộ sưu tập <span>↓</span></button></div><div class="shop-hero-fish">🐡<i>✦</i></div></div>
+      <div class="shop-section-title"><div><h2>Skin cá</h2><p>Chọn diện mạo mới để ra khơi</p></div><span>4 vật phẩm</span></div><div class="shop-grid" id="shopGrid"></div>
+      <div class="shop-section-title extras-heading"><div><h2>Hiệu ứng & vật phẩm</h2><p>Thêm chút cá tính cho mỗi chuyến phiêu lưu</p></div><span>SẮP MỞ BÁN</span></div><div class="shop-extras"><article><span>🫧</span><div><b>Vệt bong bóng</b><small>Hiệu ứng bơi lấp lánh</small></div><em>Sắp ra mắt</em></article><article><span>👑</span><div><b>Vương miện vỏ sò</b><small>Trang trí hồ sơ thủy thủ</small></div><em>Sắp ra mắt</em></article><article><span>🪙</span><div><b>Túi xu đại dương</b><small>Gói xu cho hành trình mới</small></div><em>Sắp ra mắt</em></article></div>
+      <div class="shop-note">🪙 <span>Kiếm thêm xu bằng cách chơi và hoàn thành trận đấu.</span></div>
+    </section>
+    <section class="feature-screen hidden" id="rankingScreen">
+      <div class="screen-heading"><div><div class="eyebrow">AI LÀ VUA CỦA ĐẠI DƯƠNG?</div><h1>Bảng xếp hạng <span>🏆</span></h1><p>Cùng những thủy thủ xuất sắc nhất tranh vị trí dẫn đầu.</p></div><button class="refresh-button large-refresh" id="refreshPageRanking">↻ Làm mới</button></div>
+      <div class="ranking-tabs"><button class="active" data-rank-tab="server">Toàn server</button><button data-rank-tab="week">Tuần này</button><button data-rank-tab="friends">Bạn bè</button><span>✦ Cập nhật trực tiếp</span></div>
+      <div class="podium" id="podium"></div><div class="full-ranking-card"><div class="full-ranking-head"><span>HẠNG</span><span>THỦY THỦ</span><span>CẤP ĐỘ</span><span>ĐIỂM CAO NHẤT</span></div><ol id="fullLeaderboard" class="full-leaderboard"></ol></div>
+    </section>
+    <section class="feature-screen hidden" id="profileScreen">
+      <div class="screen-heading"><div><div class="eyebrow">HÀNH TRÌNH CỦA BẠN</div><h1>Hồ sơ thủy thủ <span>🧭</span></h1><p>Mỗi cuộc phiêu lưu đều làm bạn mạnh mẽ hơn.</p></div><button class="login-button profile-login" id="profileLogin">Đăng nhập để đồng bộ</button></div>
+      <div class="profile-hero"><div class="profile-avatar" id="profileAvatar">🐟</div><div class="profile-identity"><span class="profile-label">THỦY THỦ</span><h2 id="profileName">Thủy thủ</h2><p id="profileSince">Thành viên đại dương · Khách</p></div><div class="profile-level"><div class="level-circle">1</div><div><span>CẤP ĐỘ</span><strong id="profileLevel">1</strong></div></div></div>
+      <div class="profile-stats"><article><span>🏅</span><small>ĐIỂM CAO NHẤT</small><strong id="profileBest">0</strong></article><article><span>🎮</span><small>SỐ TRẬN</small><strong id="profileGames">0</strong></article><article><span>⭐</span><small>TỔNG XP</small><strong id="profileXp">0</strong></article><article><span>🪙</span><small>XU HIỆN CÓ</small><strong id="profileCoins">120</strong></article></div>
+      <div class="history-card"><div class="history-heading"><div><h2>Lịch sử trận đấu</h2><p>Những lần bạn đã chinh phục đại dương</p></div><span>GẦN ĐÂY</span></div><div id="matchHistory" class="match-history"><div class="empty-history">Chơi trận đầu tiên để bắt đầu hành trình nhé! 🐠</div></div></div>
+      <div class="achievements"><div class="history-heading"><div><h2>Thành tích</h2><p>Huy hiệu bạn đã nhận được</p></div><span>🏅 SƯU TẬP</span></div><div class="achievement-grid" id="achievementGrid"></div></div>
+    </section>
+    <div class="toast global-toast" id="globalToast"></div>
+    <footer><span>© 2025 ĐẠI DƯƠNG BÉ XÍU</span><span>Được tạo nên từ những bong bóng <b>♡</b></span></footer>
+  </main>
+  <div class="modal-backdrop hidden" id="authModal"><section class="auth-modal"><button class="modal-close" id="closeModal">×</button><div class="modal-mark">🐠</div><div class="eyebrow">CHÀO MỪNG BẠN ĐẾN ĐẠI DƯƠNG</div><h2 id="authTitle">Tạo tài khoản</h2><p class="modal-sub">Lưu điểm số và tiếp tục hành trình của bạn.</p><button class="google-button" id="googleLogin"><span>G</span> Tiếp tục với Google</button><div class="or-divider"><span>hoặc bằng email</span></div><label>Email<input id="emailInput" type="email" placeholder="ban@email.com" autocomplete="email"></label><label>Mật khẩu<input id="passwordInput" type="password" placeholder="Ít nhất 6 ký tự" autocomplete="current-password"></label><p class="auth-error" id="authError"></p><button class="primary-button full-button" id="emailLogin">Đăng ký / Đăng nhập <span>→</span></button><small class="auth-note">Đăng nhập bằng email sẽ tự tạo tài khoản nếu email chưa được đăng ký.</small></section></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/game.js?v=17"></script>
+</body>
+</html>
